@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="demo">
+		<!-- 自定义指令运用时要在前面加v- -->
+		<p v-xxx>1223</p>
+		<p v-color>456</p>
+		<p>{{8888|img}}</p>
+	</div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/jquery.js"></script>
+<script>
+	/*(1)内置指令 v-for v-on:click/@click v-bind:class/:class v-text v-html v-show v-if v-else */
+	//自定义指令
+	//全局定义自定义指令
+	Vue.directive('xxx',{
+		bind:function(value){
+			//该指令的节点
+			console.log(this.el)
+			$(this.el).css('color','blue')
+
+		}
+	});
+	/* (2)vue没有内置服务 混合相当于自定义服务
+		
+	*/
+	var mixin = {
+		methods:{
+			Click:function(){
+				console.log("Click")
+			}
+		},
+		data:{
+			name: "yao",
+			skill:"JS"
+		},
+		/*filters
+		directives
+		ready*/
+	}
+	/* (3)vue内置过滤器  用用法 处理对象 | 过滤器（过滤器与个参数之间用空格隔开）
+	orderBy 相对于那个对象排序（第一个参数）数字(正数代表升序，负数代表降序) (排序)
+	filterBy 筛选关键字/filter 筛选关键字 in 关键字所在的对象（若没有in 则代表筛选所有对象）
+	limitBy 截取长度 从那个位子开始截取
+	currency $ 货币符号
+	lowercase 字母变为小写
+	uppercase 字母变为大写
+	json 转化为字符串
+	*/
+	//自定义过滤器
+	Vue.filter('img',function(input,value){//第一个参数为处理的对象 第二个参数为过滤器的参数
+		return input+'img';
+	})
+	/* 自定义组件
+		定义和注册组件可以分开写 也可以合在一起写
+		vue的组件和angular不同，vue的组件既可以全局注册，也可以局部注册
+		但angular的组件一定义便是全局
+	*/
+	//定义组件
+	var aaa=Vue.extend({
+		template:`<p>这是一个自定义组件</p>`
+		//vue的组件没有templateUrl
+	})
+	//全局注册(第一个参数为组件名，以标签的形式写在html结构中 第二个参数为定义的组件名)
+	Vue.component("direc",aaa)
+
+	//定义和注册写在一起可以写成如下形式（第一个参数以标签的形式写在html结构中）
+	Vue.component('direc2',{
+		template:`<p>这是第二个组件</p>`,
+		data:function(){
+			return {
+
+			}
+		}
+	})
+	new Vue({
+		el:'#demo',
+		data:{
+
+		},
+		minxins:mixin,
+		//局部定义自定义指令
+		directives:{
+			color:{
+				bind:function(){
+					$(this.el).css('color','red')
+				}
+			}
+		},
+		methods:{
+
+		},
+		//同时可以在构造器中对组件进行局部注册
+		components:{
+			direc3:aaa
+		}
+
+	})
+</script>
+</html>
